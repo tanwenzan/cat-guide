@@ -1,5 +1,5 @@
 ---
-title: netty源码解析01-NioEventLoop详解
+title: netty源码解析02-NioEventLoop详解
 date: 2021-10-08 10:17:55
 tags:
   - netty
@@ -39,14 +39,14 @@ categories:
 
 ## NioEventLoop 创建
 
-NioEventLoop的创建其实就比较简单了，它是从创建EventLoopGroup开始的，你还记得我们上一节的demo代码中，有这么一行代码：`NioEventLoopGroup bossGroup = new NioEventLoopGroup();` 那么NioEventLoop就是从`new NioEventLoopGroup();`开始的。大致的流程我还是先告诉你：
+NioEventLoop的创建其实就比较简单了，它是从创建EventLoopGroup开始的，你还记得我们上一节的demo代码中，有这么一行代码：`NioEventLoopGroup bossGroup = new NioEventLoopGroup();` 那么`NioEventLoop`就是从`new NioEventLoopGroup();`开始的。大致的流程我还是先告诉你：
 
 1. `new NioEventLoopGroup();` 创建线程组，默认线程数量是cpu核数*2。
-   1. `new ThreadPreTaskExecutor();` 创建线程创建器。
-   2. `for(nThreads){newChild()}` 创建对应数量的NioEventLoop，每个NioEventLoop对应一个线程。
-   3. `chooser = chooserFactory.newChooser(children);`通过这个创建一个线程选择器，以后netty执行对应的事件，就通过这个选择器来选择哪一个NioEventLoop来进行执行。
+2. `new ThreadPreTaskExecutor();` 创建线程创建器。
+3. `for(nThreads){newChild()}` 创建对应数量的`NioEventLoop`，每个`NioEventLoop`对应一个线程。
+4. `chooser = chooserFactory.newChooser(children);`通过这个创建一个线程选择器，以后netty执行对应的事件，就通过这个选择器来选择哪一个`NioEventLoop`来进行执行。
 
-我们一起去看看这个EventLoopGroup的构造函数做了哪些事情吧：
+我们一起去看看这个`EventLoopGroup`的构造函数做了哪些事情吧：
 
 ```java
 //EventLoopGroup.java
@@ -158,7 +158,7 @@ protected MultithreadEventExecutorGroup(int nThreads, Executor executor,
 
 ### Executor
 
-我们通过上述代码知道，`executor`开始的时候是null，通过`executor = new ThreadPerTaskExecutor(newDefaultThreadFactory());`进行赋值。首先我们看看这个`newDefaultThreadFactory();`做了什么事情，代码如下：
+我们通过上述代码知道，`executor`开始的时候是`null`，通过`executor = new ThreadPerTaskExecutor(newDefaultThreadFactory());`进行赋值。首先我们看看这个`newDefaultThreadFactory();`做了什么事情，代码如下：
 
 ```java
 //MultithreadEventExecutorGroup.java
@@ -198,7 +198,7 @@ public DefaultThreadFactory(String poolName, boolean daemon, int priority, Threa
 }
 ```
 
-下面这张图就是为了说明这个poolName是nioEventLoopGroup 而并非是其他文章和视频所说的nioEventLoop。其实真正阅读和调试过源码的人不会出现这种低级错误，所以，懂得都懂~
+下面这张图就是为了说明这个`poolName`是`nioEventLoopGroup` 而并非是其他文章和视频所说的`nioEventLoop`。其实真正阅读和调试过源码的人不会出现这种低级错误，所以，懂得都懂~
 
 ![](https://img.zeroable.cn/202204081427344.png)
 
@@ -254,15 +254,15 @@ protected Thread newThread(Runnable r, String name) {
 
 ```
 
- 到这里，我们知道了这个ThreadPerTaskExecutor做了什么事情。他主要是在每次执行任务的时候，都会创建一个线程实例。并且线程名称的规则就是nioEventLoopGroup-poolId-threadId 这样的格式。
+ 到这里，我们知道了这个`ThreadPerTaskExecutor`做了什么事情。他主要是在每次执行任务的时候，都会创建一个线程实例。并且线程名称的规则就是`nioEventLoopGroup-poolId-threadId` 这样的格式。
 
 ### newChild()
 
-上面讲到`newChild()` 是去创建NioEventLoop，其中NioEventLoop构造函数做了以下几件事情：
+上面讲到`newChild()` 是去创建`NioEventLoop`，其中`NioEventLoop`构造函数做了以下几件事情：
 
-1. 保存上面创建的线程执行器ThreadPerTaskExecutor。
-2. 创建一个队列MpscQueue。
-3. 创建一个selector。
+1. 保存上面创建的线程执行器`ThreadPerTaskExecutor`。
+2. 创建一个队列`MpscQueue`。
+3. 创建一个`selector`。
 
 我们来看看具体实现：
 
@@ -320,11 +320,11 @@ protected Queue<Runnable> newTaskQueue(int maxPendingTasks) {
 }
 ```
 
-那么我们NioEventLoop的创建过程就搞明白了，但是创建了这么多个NioEventLoop，那么我们该怎么去选择哪一个NioEventLoop去执行任务呢？这时候线程选择器就至关重要了，netty就是通过`chooser = chooserFactory.newChooser(children);`来创建一个线程选择器。
+那么我们NioEventLoop的创建过程就搞明白了，但是创建了这么多个`NioEventLoop`，那么我们该怎么去选择哪一个`NioEventLoop`去执行任务呢？这时候线程选择器就至关重要了，`netty`就是通过`chooser = chooserFactory.newChooser(children);`来创建一个线程选择器。
 
 ### newChooser()
 
-而这个chooser就是为了给每一个新连接绑定对应的NioEventLoop，那么对应的方法就在NioEventLoopGroup中的`next();`方法中，我们一起来看下吧~
+而这个chooser就是为了给每一个新连接绑定对应的`NioEventLoop`，那么对应的方法就在`NioEventLoopGroup`中的`next();`方法中，我们一起来看下吧~
 
 ```java
 //MultithreadEventExecutorGroup.java  NioEventLoopGroup的父类。
@@ -378,11 +378,11 @@ private static final class GenericEventExecutorChooser implements EventExecutorC
 }
 ```
 
-到这里，我们就弄懂了NioEventLoop的创建，以及如果去选择哪一个NioEventLoop去实行任务。那么我们接下来去了解NioEventLoop是怎么被启动起来的。
+到这里，我们就弄懂了`NioEventLoop`的创建，以及如果去选择哪一个`NioEventLoop`去实行任务。那么我们接下来去了解`NioEventLoop`是怎么被启动起来的。
 
 ## NioEventLoop 启动
 
-这里有俩个地方启动了，第一个就是我们之前说的绑定端口的时候，其实就是在NioEventLoop中的线程进行创建的。第二个就是新连接接入时，通过chooser来绑定NioEventLoop。这个后续会有文章详细讲解新连接接入流程。这里就以第一个为例，服务端绑定端口的时候，就是在`doBind0();`方法中调用了`executor();` 我们一起来回忆一吧：
+这里有俩个地方启动了，第一个就是我们之前说的绑定端口的时候，其实就是在`NioEventLoop`中的线程进行创建的。第二个就是新连接接入时，通过`chooser`来绑定`NioEventLoop`。这个后续会有文章详细讲解新连接接入流程。这里就以第一个为例，服务端绑定端口的时候，就是在`doBind0();`方法中调用了`executor();` 我们一起来回忆一吧：
 
 ```java
 //AbstractBootstrap.java

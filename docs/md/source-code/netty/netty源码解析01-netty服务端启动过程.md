@@ -39,9 +39,9 @@ categories:
 1. 创建服务端Channel。
   	1. `bind()`用户代码入口。
   	2. `initAndRegister()`初始化并注册
-  	3. `newChannel()` 创建java服务端Channel。
-2. 初始化服务端Channel。
-3. 注册selector。
+  	3. `newChannel()` 创建`java`服务端`Channel`。
+2. 初始化服务端`Channel`。
+3. 注册`selector`。
 4. 绑定端口。
 
 首先我们先写一个简单的netty Server demo，如下：
@@ -184,8 +184,10 @@ public T newChannel() {
 
 我们一步步来通过源码来看看这5步具体怎么实现的。首先我们看看`newSocket()` 做了什么事情，首先把NioServerSocketChannel的构造方法内容贴出来：
 
+
+
 ```java
-    private static final SelectorProvider DEFAULT_SELECTOR_PROVIDER = SelectorProvider.provider();
+private static final SelectorProvider DEFAULT_SELECTOR_PROVIDER = SelectorProvider.provider();
 	/**
      * Create a new instance
      */
@@ -245,7 +247,7 @@ public T newChannel() {
     }
 ```
 
-最后一步，生成channel 的id 、 unsafe、pipline。
+最后一步，生成`channel` 的`id` 、 `unsafe`、`pipline`。
 
 ```java
 protected AbstractChannel(Channel parent) {
@@ -263,7 +265,7 @@ protected AbstractChannel(Channel parent) {
 1. 设置ChannelOptions 、ChannelAttrs。
 2. 设置childOptions、childAttrs。每次accept一个新连接，就会用户自定义的这俩个属性配置上去。
 3. `config handler` 配置服务端pipline。这个的逻辑链也会是在用户代码里面的handler方法进行设置。
-4. `add ServerBootstrapAcceptor ` 添加连接器。服务端的pipline都会有一个ServerBootstrapAcceptor这个特殊的处理器。这个处理器主要用于给accept一个新连接分配一个nio的线程。
+4. add ServerBootstrapAcceptor 添加连接器。服务端的pipline都会有一个ServerBootstrapAcceptor这个特殊的处理器。这个处理器主要用于给accept一个新连接分配一个nio的线程。
 
 我们开始从`init(channel)` 入手，发现这个是一个abstract 方法，有俩个子类，我们分析的服务端，我们选择ServerBootstrap类，内容如下：
 
@@ -526,7 +528,7 @@ protected void doBind(SocketAddress localAddress) throws Exception {
 }
 ```
 
-其中这个事件传播是从pipeline进行传播，我们来看看这个pipeline做了哪些事情。我们跟进去发现，他触发了pipeline中的一个head的`invokeChannelActive();`方法。而这个方法最终调用的就是DefaultChannelPipeline的HeadContext子类的`channelActive(ctx);`方法，代码如下：
+其中这个事件传播是从pipeline进行传播，我们来看看这个pipeline做了哪些事情。我们跟进去发现，他触发了pipeline中的一个head的`invokeChannelActive();`方法。而这个方法最终调用的就是`DefaultChannelPipeline`的`HeadContext`子类的`channelActive(ctx);`方法，代码如下：
 
 ```java
 @Override
