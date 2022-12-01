@@ -10,8 +10,13 @@ features:
   details: 学而不思则罔，思而不学则殆。
 - title: 质变升华
   details: 时人不识凌云木，直待凌云始道高。
-footer: GPL Licensed | Copyright © 2022 zeroable，All rights reserved. 种一棵树最好的时间是十年前，其次是现在！
 ---
+
+::: slot footer
+[湘ICP备2022024767号](https://beian.miit.gov.cn)
+
+GPL Licensed | Copyright © 2022-present. zeroable 种一棵树最好的时间是十年前，其次是现在！
+:::
 
 ## 公众号
 
