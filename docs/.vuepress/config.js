@@ -243,6 +243,16 @@ module.exports = {
             link: "/md/other/guide-to-reading",
           },
           {
+            text: "内功修炼",
+            items:[{
+              text: "网络",
+              items:[{
+                text: "netty",
+                link: "/md/source-code/netty/server/netty源码解析01-netty服务端启动过程.md"
+              }]
+            }],
+          },
+          {
             text: "MySql",
             items: [
               {
@@ -313,12 +323,26 @@ module.exports = {
           "/md/other/": genBarOther(),
           "/md/cat4j-boot/elementary/": getBarCat4JBootElementtary(),
           "/md/MySQL/index/": getMySqlIndex(),
-
+          "/md/source-code/netty/": getNettyIndex()
         },
       },
     },
   },
 };
+
+function getNettyIndex(){
+  return [{
+    title:"netty 服务端源码解析",
+    collapsable: false,
+    sidebarDepth: 2,
+    children: [
+        "server/netty源码解析01-netty服务端启动过程.md",
+        "server/netty源码解析02-NioEventLoop详解.md",
+        "server/netty源码解析03-新连接的处理.md",
+        "server/netty源码解析04-pipeline详解.md",
+    ],
+  }];
+}
 
 function getMySqlIndex() {
   return [
