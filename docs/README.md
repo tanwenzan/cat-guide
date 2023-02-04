@@ -23,7 +23,7 @@ GPL Licensed | Copyright © 2022-present. zeroable 种一棵树最好的时间�
 分享各种编程语言，开发技术，MySQL，JAVA，框架源码，程序人生，忙碌的工作和生活的琐事也不要忘机给自己充充电~🔋
 
 <div align="center">
-    <img src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-85560678-a5a7-4ec9-af20-339c9573e9fe/ba1a6204-065f-470a-bff7-684dd97af734.jpg" width="180px">
+    <img src="https://img.zeroable.cn/202204081144544.png" width="180px">
     <div style="font-size: 9px;">公众号：码农小谭</div>
     <br/>
 </div>

@@ -121,7 +121,7 @@ private ChannelFuture doBind(final SocketAddress localAddress) {
 final ChannelFuture initAndRegister() {
     Channel channel = null;
     try {
-        // 这里非常重要
+        // 这里非常重要,这个channelFactory是在调用channel(classz)时进行赋值的，具体类为ReflectiveChannelFactory。
         channel = channelFactory.newChannel();
         //这里就是初始化channel，这里后面再讲。
         init(channel);
@@ -139,7 +139,7 @@ final ChannelFuture initAndRegister() {
 
 ### 创建java服务端Channel
 
-我们继续通过第5行代码`channelFactory.newChannel();` 继续跟进去，发现她其实就是通过反射进行创建了一个对象：
+我们继续通过第5	行代码`channelFactory.newChannel();` 继续跟进去，发现她其实就是通过反射进行创建了一个对象：
 
 ```java
 @Override
