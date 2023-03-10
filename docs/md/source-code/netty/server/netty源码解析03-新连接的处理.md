@@ -150,7 +150,7 @@ protected void doBeginRead() throws Exception {
 
 我们知道服务端的线程在绑定端口前就启动了，这个线程就是轮询进行获取事件，其中就包括新连接事件。还记得上一篇文章分析NioEventLoop时讲到的`select();`方法吗？通过这个方法，调用JDK NIO 底层的`select();`方法，获取网络IO。然后通过`processSelectedKeys();`来处理IO事件。这里netty对原来的SelectKeySet进行了优化，然后遍历这个集合，查找对应的事件：
 
-![image-20211112141559714](https://gitee.com/zeroable/ima/raw/master/img/image-20211112141559714.png)
+![image-20230310193843669](https://img.zeroable.cn/image-20230310193843669.png)
 
 ### 新连接的处理
 
