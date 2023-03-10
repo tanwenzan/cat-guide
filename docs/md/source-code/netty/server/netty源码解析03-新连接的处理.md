@@ -48,7 +48,7 @@ categories:
 
 如果你看过之前的文章，那么这个你应该会知道，这个注册发生在netty调用JDK Nio底层的注册，并且将netty的NioServerSocketChannel当做一个att绑定到jdk 的channel上。我们再次复习一下把~
 
-![image-20211112104435984](https://gitee.com/zeroable/ima/raw/master/img/image-20211112104435984.png)
+![image-20230310193625718](https://img.zeroable.cn/image-20230310193625718.png)
 
 通过上面的流程可以发现，通过`selectionKey = javaChannel().register(eventLoop().selector, 0, this);`这里的参数0就是最开始的interestOps。
 
