@@ -56,7 +56,7 @@ categories:
 
 然后等待到端口绑定完成后，netty会是用`pipeline.fireChannelActive();`对完成事件进行传播，如下图：
 
-![image-20211112110724253](https://gitee.com/zeroable/ima/raw/master/img/image-20211112110724253.png)
+![image-20230310191611143](https://img.zeroable.cn/image-20230310191611143.png)
 
 pipeline有head和tail节点，事件的传播都是从head节点开始传播，点进fireChannelActive中，我们可以看到：
 
@@ -156,7 +156,7 @@ protected void doBeginRead() throws Exception {
 
 这里触发了`unsafe.read();`事件。如下：
 
-![image-20211112142257571](https://gitee.com/zeroable/ima/raw/master/img/image-20211112142257571.png)
+![image-20230310191724463](https://img.zeroable.cn/image-20230310191724463.png)
 
 我们看看`doReadMessages();`做了些啥：
 
